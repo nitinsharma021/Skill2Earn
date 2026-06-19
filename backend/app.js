@@ -1,27 +1,20 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use("/api/users", userRoutes);
 
-// Routes
-// app.use('/api/users', require('./routes/userRoutes'));
-// app.use('/api/gigs', require('./routes/gigRoutes'));
-
-// Basic route
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to skill2Earn API' });
+app.get("/", (req, res) => {
+    res.send("Skill2Earn Backend Running 🚀");
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Internal Server Error' });
-});
+const PORT = process.env.PORT || 5000;
 
-module.exports = app;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
