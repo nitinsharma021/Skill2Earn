@@ -1,3 +1,4 @@
+import FeaturedFreelancers from "../components/FeaturedFreelancers";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Categories from "../components/Categories";
@@ -13,8 +14,10 @@ return(
 <Hero/>
 
 <Categories/>
+<FeaturedFreelancers/>
 
 </>
+
 
 )
 

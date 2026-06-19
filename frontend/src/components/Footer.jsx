@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="footer-section">
           <h4>About</h4>
           <ul>
-            <li><a href="#about">About Us</a></li>
+            <li><a to="/about">About Us</a></li>
             <li><a href="#careers">Careers</a></li>
           </ul>
         </div>
@@ -25,7 +25,9 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; 2024 skill2Earn. All rights reserved.</p>
+        <p>
+  &copy; {new Date().getFullYear()} Skill2Earn. All rights reserved.
+</p>
       </div>
     </footer>
   );

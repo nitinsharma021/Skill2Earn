@@ -16,6 +16,30 @@ function Hero() {
           and grow your business with AI-powered recommendations.
 
         </p>
+        <div className="flex justify-center gap-2 mt-8">
+
+<input
+
+type="text"
+
+placeholder="Search skills..."
+
+className="w-96 p-3 rounded-lg border border-gray-300"
+
+/>
+
+
+<button
+
+className="bg-blue-600 text-white px-6 rounded-lg"
+
+>
+
+Search
+
+</button>
+
+</div>
 
         <div className="space-x-4">
 
