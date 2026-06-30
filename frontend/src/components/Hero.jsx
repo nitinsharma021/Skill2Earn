@@ -1,57 +1,57 @@
 function Hero() {
   return (
-    <section className="bg-slate-100 py-24">
+    <section className="bg-slate-100 py-20">
 
-      <div className="max-w-6xl mx-auto text-center">
+      <div className="max-w-5xl mx-auto px-6 text-center">
 
-        <h1 className="text-5xl font-bold mb-6">
+        <h1 className="text-5xl md:text-6xl font-bold leading-tight">
 
           Turn Skills Into Income
 
         </h1>
 
-        <p className="text-xl text-gray-600 mb-8">
+        <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
 
-          Find top freelancers, hire experts,
-          and grow your business with AI-powered recommendations.
+          Find trusted service providers for every need—from home services
+          to professional expertise—all in one place.
 
         </p>
-        <div className="flex justify-center gap-2 mt-8">
 
-<input
+        {/* Search Bar */}
 
-type="text"
+        <div className="flex justify-center mt-10">
 
-placeholder="Search skills..."
+          <div className="flex w-full max-w-2xl">
 
-className="w-96 p-3 rounded-lg border border-gray-300"
+            <input
+              type="text"
+              placeholder="Search services (Teacher, Driver, Tailor...)"
+              className="flex-1 p-4 rounded-l-xl border border-gray-300 outline-none"
+            />
 
-/>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-r-xl">
 
+              Search
 
-<button
+            </button>
 
-className="bg-blue-600 text-white px-6 rounded-lg"
+          </div>
 
->
+        </div>
 
-Search
+        {/* Buttons */}
 
-</button>
+        <div className="flex justify-center gap-4 mt-8 flex-wrap">
 
-</div>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl">
 
-        <div className="space-x-4">
-
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg">
-
-            Explore Gigs
+            Find Services
 
           </button>
 
-          <button className="border px-6 py-3 rounded-lg">
+          <button className="border border-gray-400 hover:bg-gray-200 px-8 py-3 rounded-xl">
 
-            Become a Seller
+            Become a Service Provider
 
           </button>
 

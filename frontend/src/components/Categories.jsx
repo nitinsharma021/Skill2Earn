@@ -1,11 +1,19 @@
-const categories = [
 
-"Web Development",
-"AI & ML",
-"Graphic Design",
-"Content Writing",
-"Video Editing",
-"Digital Marketing"
+
+const categories = [
+  "Teacher",
+  "Tailor",
+  "Driver",
+  "Carpenter",
+  "Electrician",
+  "Plumber",
+  "Developer",
+  "Designer",
+  "Photographer",
+  "Mechanic",
+  "Home Tutor",
+  "Cook"
+
 
 ];
 

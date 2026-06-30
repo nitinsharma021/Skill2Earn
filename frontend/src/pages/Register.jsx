@@ -1,4 +1,49 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
+
 function Register() {
+
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    full_name: "",
+    email: "",
+    password: "",
+    role: "provider"
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    try {
+
+      const response = await api.post("/users/register", formData);
+
+      alert(response.data.message);
+
+      navigate("/login");
+
+    } catch (error) {
+
+      alert(error.response?.data?.message || "Registration Failed");
+
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 flex justify-center items-center">
 
@@ -12,33 +57,56 @@ function Register() {
           Create your account
         </p>
 
-        <form className="space-y-4">
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit}
+        >
 
           <input
+            type="text"
+            name="full_name"
             placeholder="Full Name"
             className="w-full border p-3 rounded-lg"
+            value={formData.full_name}
+            onChange={handleChange}
           />
 
           <input
+            type="email"
+            name="email"
             placeholder="Email"
             className="w-full border p-3 rounded-lg"
+            value={formData.email}
+            onChange={handleChange}
           />
 
           <input
             type="password"
+            name="password"
             placeholder="Password"
             className="w-full border p-3 rounded-lg"
-          />
-
-          <select className="w-full border p-3 rounded-lg">
-            <option>Freelancer</option>
-            <option>Client</option>
+            value={formData.password}
+            onChange={handleChange}
+          />          <select
+            name="role"
+            className="w-full border p-3 rounded-lg"
+            value={formData.role}
+            onChange={handleChange}
+          >
+            <option value="provider">Service Provider</option>
+            <option value="client">Client</option>
           </select>
 
           <button
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
+            type="submit"
+            disabled={loading}
+            className={`w-full p-3 rounded-lg text-white font-semibold transition ${
+              loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Register
+            {loading ? "Creating Account..." : "Register"}
           </button>
 
         </form>

@@ -18,7 +18,7 @@ function Navbar() {
           </Link>
 
           <Link to="/gigs" className="hover:text-blue-600">
-            Browse Gigs
+            Browse Services
           </Link>
 
           <Link to="/login">

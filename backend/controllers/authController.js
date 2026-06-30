@@ -1,156 +1,114 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const users = require("../data/users");
+const userModel = require("../models/userModel");
 
+const createToken = (user) => {
+    return jwt.sign(
+        {
+            id: user.id,
+            email: user.email,
+            role: user.role
+        },
+        process.env.JWT_SECRET || "skill2earn-secret",
+        {
+            expiresIn: "1d"
+        }
+    );
+};
 
 // REGISTER
 const register = (req, res) => {
 
-    const { name, email, password } = req.body;
+    const { full_name, email, password, role } = req.body;
 
+    userModel.findUserByEmail(email, (err, results) => {
 
-    // Check existing user
-    const existingUser = users.find(
-        user => user.email === email
-    );
+        if (err) {
+            return res.status(500).json({
+                message: "Database Error"
+            });
+        }
 
-    if (existingUser) {
+        if (results.length > 0) {
+            return res.status(400).json({
+                message: "User already exists"
+            });
+        }
 
-        return res.status(400).json({
+        const hashedPassword = bcrypt.hashSync(password, 10);
 
-            message: "User already exists"
+        const user = {
+            full_name,
+            email,
+            password: hashedPassword,
+            role
+        };
+
+        userModel.createUser(user, (err, result) => {
+
+            if (err) {
+                return res.status(500).json({
+                    message: "Registration Failed"
+                });
+            }
+
+            res.status(201).json({
+                message: "User Registered Successfully"
+            });
 
         });
-
-    }
-
-
-    // Hash password
-    const hashedPassword = bcrypt.hashSync(password, 10);
-
-
-    const user = {
-
-        id: Date.now(),
-
-        name,
-
-        email,
-
-        password: hashedPassword
-
-    };
-
-
-    users.push(user);
-
-
-    res.status(201).json({
-
-        message: "User Registered",
-
-        user
 
     });
 
 };
 
-
-
-
 // LOGIN
 const login = (req, res) => {
 
-
     const { email, password } = req.body;
 
+    userModel.findUserByEmail(email, (err, results) => {
 
+        if (err) {
+            return res.status(500).json({
+                message: "Database Error"
+            });
+        }
 
-    const user = users.find(
+        if (results.length === 0) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
 
-        user => user.email === email
+        const user = results[0];
+        const storedPassword = user.password || "";
 
-    );
+        const isMatch = bcrypt.compareSync(password, storedPassword);
+        const isLegacyMatch = storedPassword && password === storedPassword;
 
+        if (!isMatch && !isLegacyMatch) {
+            return res.status(401).json({
+                message: "Invalid Credentials"
+            });
+        }
 
+        const token = createToken(user);
 
-    if (!user) {
-
-
-        return res.status(404).json({
-
-            message: "User not found"
-
+        res.status(200).json({
+            message: "Login Successful",
+            token,
+            user: {
+                ...user,
+                password: undefined
+            }
         });
 
-    }
-
-
-
-    const isMatch = bcrypt.compareSync(
-
-        password,
-
-        user.password
-
-    );
-
-
-
-    if (!isMatch) {
-
-
-        return res.status(401).json({
-
-            message: "Invalid Credentials"
-
-        });
-
-    }
-
-
-
-    const token = jwt.sign(
-
-{
-
-id:user.id,
-
-email:user.email
-
-},
-
-process.env.JWT_SECRET,
-
-{
-
-expiresIn:"1d"
-
-}
-
-);
-
-
-
-res.status(200).json({
-
-message:"Login Successful",
-
-token,
-
-user
-
-});
+    });
 
 };
 
-
-
-
 module.exports = {
-
     register,
-
     login
-
 };
