@@ -1,6 +1,7 @@
 const express = require("express");
 const profileRoutes = require("./routes/profileRoutes");
 const cors = require("cors");
+const providerRoutes = require("./routes/providerRoutes");
 require("dotenv").config();
 
 const db = require("./config/db");
@@ -21,6 +22,7 @@ app.use((err, req, res, next) => {
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/providers", providerRoutes);
 
 app.get("/", (req, res) => {
     res.send("Skill2Earn Backend Running 🚀");

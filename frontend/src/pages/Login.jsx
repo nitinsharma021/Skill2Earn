@@ -36,8 +36,29 @@ function Login() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user || {}));
 
-      alert(response.data?.message || "Login successful");
-      navigate("/");
+     alert(response.data?.message || "Login Successful");
+
+if (user.role === "client") {
+
+    navigate("/");
+
+} else {
+
+    const profileResponse = await api.get(
+        `/profile/check/${user.id}`
+    );
+
+    if (profileResponse.data.exists) {
+
+        navigate("/");
+
+    } else {
+
+        navigate("/completeprofile");
+
+    }
+
+}
     } catch (error) {
       console.error(error);
       alert(error.response?.data?.message || error.message || "Login Failed");

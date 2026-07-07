@@ -2,9 +2,9 @@ import { useState } from "react";
 import api from "../services/api";
 
 export default function CompleteProfile() {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [profile, setProfile] = useState({
-    fullName: "",
-    email: "",
+   
     phone: "",
     whatsapp: "",
     profession: "",
@@ -31,9 +31,8 @@ export default function CompleteProfile() {
 
     try {
       const response = await api.post("/profile", {
-        user_id: 1,
-        fullName: profile.fullName,
-        email: profile.email,
+        user_id:  user.id,
+       
         phone: profile.phone,
         whatsapp: profile.whatsapp,
         profession: profile.profession,

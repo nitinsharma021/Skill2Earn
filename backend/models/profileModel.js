@@ -1,5 +1,6 @@
 const db = require("../config/db");
 
+// Create Profile
 const createProfile = (profile, callback) => {
 
     const sql = `
@@ -37,6 +38,20 @@ const createProfile = (profile, callback) => {
     );
 };
 
+// ⭐ Check if profile already exists
+const checkProfileExists = (userId, callback) => {
+
+    const sql = `
+        SELECT id
+        FROM profiles
+        WHERE user_id = ?
+    `;
+
+    db.query(sql, [userId], callback);
+
+};
+
 module.exports = {
-    createProfile
+    createProfile,
+    checkProfileExists
 };

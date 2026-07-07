@@ -1,5 +1,6 @@
 const profileModel = require("../models/profileModel");
 
+// Create Profile
 const createProfile = (req, res) => {
 
     const {
@@ -43,6 +44,28 @@ const createProfile = (req, res) => {
 
 };
 
+// ⭐ Check Profile Exists
+const checkProfile = (req, res) => {
+
+    const { userId } = req.params;
+
+    profileModel.checkProfileExists(userId, (err, results) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: "Database Error"
+            });
+        }
+
+        res.status(200).json({
+            exists: results.length > 0
+        });
+
+    });
+
+};
+
 module.exports = {
-    createProfile
+    createProfile,
+    checkProfile
 };

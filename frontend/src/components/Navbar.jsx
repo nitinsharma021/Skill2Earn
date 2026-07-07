@@ -27,11 +27,12 @@ function Navbar() {
             </button>
           </Link>
 
-          <Link to="/register">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">
-              Join
-            </button>
-          </Link>
+         <Link
+  to="/join"
+  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+>
+  Join
+</Link>
 
         </div>
 

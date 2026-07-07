@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 
 function Register() {
-
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const role = searchParams.get("role");
 
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
     password: "",
-    role: "provider"
+    role: role || "client",
   });
 
   const [loading, setLoading] = useState(false);
@@ -28,7 +30,6 @@ function Register() {
     setLoading(true);
 
     try {
-
       const response = await api.post("/users/register", formData);
 
       alert(response.data.message);
@@ -36,16 +37,14 @@ function Register() {
       navigate("/login");
 
     } catch (error) {
-
       alert(error.response?.data?.message || "Registration Failed");
-
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex justify-center items-center">
+    <div className="min-h-screen bg-slate-100 flex justify-center items-center px-4">
 
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
 
@@ -69,6 +68,7 @@ function Register() {
             className="w-full border p-3 rounded-lg"
             value={formData.full_name}
             onChange={handleChange}
+            required
           />
 
           <input
@@ -78,6 +78,7 @@ function Register() {
             className="w-full border p-3 rounded-lg"
             value={formData.email}
             onChange={handleChange}
+            required
           />
 
           <input
@@ -87,15 +88,24 @@ function Register() {
             className="w-full border p-3 rounded-lg"
             value={formData.password}
             onChange={handleChange}
-          />          <select
-            name="role"
-            className="w-full border p-3 rounded-lg"
-            value={formData.role}
-            onChange={handleChange}
-          >
-            <option value="provider">Service Provider</option>
-            <option value="client">Client</option>
-          </select>
+            required
+          />
+
+          {/* Selected Role */}
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+
+            <p className="text-center font-semibold text-blue-700">
+
+              Registering as:{" "}
+
+              {formData.role === "provider"
+                ? "Professional"
+                : "Client"}
+
+            </p>
+
+          </div>
 
           <button
             type="submit"
