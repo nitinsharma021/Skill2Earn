@@ -70,20 +70,9 @@ function Hero() {
 
         <div className="flex justify-center gap-4 mt-8 flex-wrap">
 
-          <Link
-            to="/services"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl transition"
-          >
-            Find Services
-          </Link>
+         
 
-          <Link
-            to="/register"
-            className="border border-gray-400 hover:bg-gray-200 px-8 py-3 rounded-xl transition"
-          >
-            Become a Service Provider
-          </Link>
-
+          
         </div>
 
         {/* Statistics */}

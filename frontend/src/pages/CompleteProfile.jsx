@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 export default function CompleteProfile() {
   const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+  const [isEdit, setIsEdit] = useState(false);
   const [profile, setProfile] = useState({
    
     phone: "",
@@ -17,6 +21,34 @@ export default function CompleteProfile() {
   });
 
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+
+    const loadProfile = async () => {
+
+        try {
+
+          const check = await api.get(`/profile/check/${user.id}`);
+
+if (!check.data.exists) {
+    return;
+}
+            const response = await api.get(`/profile/${user.id}`);
+
+            setProfile(response.data);
+
+            setIsEdit(true);
+
+        } catch (error) {
+
+            console.log("New user. Create profile.");
+
+        }
+
+    };
+
+    loadProfile();
+
+}, []);
 
   const handleChange = (e) => {
     setProfile({
@@ -27,10 +59,44 @@ export default function CompleteProfile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!profile.phone.trim()) {
+    alert("Phone number is required");
+    return;
+}
+
+if (!profile.whatsapp.trim()) {
+    alert("WhatsApp number is required");
+    return;
+}
+
+if (!profile.category) {
+    alert("Please select a category");
+    return;
+}
+
+if (!profile.location.trim()) {
+    alert("Location is required");
+    return;
+}
+
+if (!profile.price.trim()) {
+    alert("Service charge is required");
+    return;
+}
+
+if (!profile.about.trim()) {
+    alert("Please write something about yourself");
+    return;
+}
     setLoading(true);
 
     try {
-      const response = await api.post("/profile", {
+      let response;
+
+if (isEdit) {
+
+    response = await api.put(`/profile/${user.id}`, {
+
         user_id:  user.id,
        
         phone: profile.phone,
@@ -41,10 +107,32 @@ export default function CompleteProfile() {
         location: profile.location,
         price: profile.price,
         about: profile.about,
-        availability: profile.availability
-      });
+       availability: profile.availability
 
-      alert(response.data.message || "Profile created successfully");
+    });
+
+} else {
+
+    response = await api.post("/profile", {
+
+        user_id: user.id,
+
+        phone: profile.phone,
+        whatsapp: profile.whatsapp,
+       
+        category: profile.category,
+        experience: profile.experience,
+        location: profile.location,
+        price: profile.price,
+        about: profile.about,
+        availability: profile.availability
+
+    });
+
+}
+     alert(response.data.message);
+
+navigate("/services");
     } catch (error) {
       console.error(error);
       alert("Profile creation failed");
@@ -70,29 +158,9 @@ export default function CompleteProfile() {
           <div>
             <h2 className="text-2xl font-semibold mb-6">Personal Information</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block mb-2 font-medium">Full Name</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  placeholder="Enter your full name"
-                  className="w-full border rounded-lg p-3"
-                  value={profile.fullName}
-                  onChange={handleChange}
-                />
-              </div>
+             
 
-              <div>
-                <label className="block mb-2 font-medium">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  className="w-full border rounded-lg p-3"
-                  value={profile.email}
-                  onChange={handleChange}
-                />
-              </div>
+              
 
               <div>
                 <label className="block mb-2 font-medium">Phone Number</label>
@@ -123,17 +191,7 @@ export default function CompleteProfile() {
           <div>
             <h2 className="text-2xl font-semibold mb-6">Professional Information</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block mb-2 font-medium">Profession</label>
-                <input
-                  type="text"
-                  name="profession"
-                  placeholder="Example: Teacher"
-                  className="w-full border rounded-lg p-3"
-                  value={profile.profession}
-                  onChange={handleChange}
-                />
-              </div>
+              
 
               <div>
                 <label className="block mb-2 font-medium">Category</label>
@@ -230,7 +288,13 @@ export default function CompleteProfile() {
             disabled={loading}
             className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
           >
-            {loading ? "Saving..." : "Complete Profile"}
+           {
+  loading
+    ? "Saving..."
+    : isEdit
+    ? "Update Profile"
+    : "Complete Profile"
+}
           </button>
         </form>
       </div>

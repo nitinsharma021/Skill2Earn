@@ -54,7 +54,7 @@ if (user.role === "client") {
 
     } else {
 
-        navigate("/completeprofile");
+        navigate("/complete-profile");
 
     }
 
