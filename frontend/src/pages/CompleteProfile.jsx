@@ -67,6 +67,75 @@ export default function CompleteProfile() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  const renderAnalysis = (analysisData) => {
+    if (!analysisData) {
+      return null;
+    }
+
+    if (typeof analysisData === "string") {
+      return <p className="text-gray-700">{analysisData}</p>;
+    }
+
+    const items = [];
+
+    if (typeof analysisData.profileScore !== "undefined") {
+      items.push(
+        <div key="profileScore" className="text-sm text-gray-700">
+          <span className="font-medium">Profile Score:</span> {analysisData.profileScore}
+        </div>
+      );
+    }
+
+    if (typeof analysisData.confidenceScore !== "undefined") {
+      items.push(
+        <div key="confidenceScore" className="text-sm text-gray-700">
+          <span className="font-medium">Confidence:</span> {analysisData.confidenceScore}
+        </div>
+      );
+    }
+
+    if (Array.isArray(analysisData.strengths) && analysisData.strengths.length > 0) {
+      items.push(
+        <div key="strengths" className="mt-2">
+          <h4 className="font-medium">Strengths</h4>
+          <ul className="list-disc list-inside text-gray-700 mt-2">
+            {analysisData.strengths.map((item, index) => (
+              <li key={`strength-${index}`}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    if (Array.isArray(analysisData.missingFields) && analysisData.missingFields.length > 0) {
+      items.push(
+        <div key="missingFields" className="mt-2">
+          <h4 className="font-medium">Missing Fields</h4>
+          <ul className="list-disc list-inside text-gray-700 mt-2">
+            {analysisData.missingFields.map((item, index) => (
+              <li key={`missing-${index}`}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    if (Array.isArray(analysisData.recommendations) && analysisData.recommendations.length > 0) {
+      items.push(
+        <div key="recommendations" className="mt-2">
+          <h4 className="font-medium">Recommendations</h4>
+          <ul className="list-disc list-inside text-gray-700 mt-2">
+            {analysisData.recommendations.map((item, index) => (
+              <li key={`recommendation-${index}`}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    return <div className="space-y-2">{items}</div>;
+  };
+
   const validateProfile = () => {
     const nextErrors = {};
 
@@ -121,6 +190,7 @@ export default function CompleteProfile() {
       setProfile((prev) => ({
         ...prev,
         phone: aiProfile.phone || prev.phone,
+        whatsapp: aiProfile.whatsapp || prev.whatsapp,
         category: aiProfile.category || prev.category,
         experience: aiProfile.experience || prev.experience,
         location: aiProfile.location || prev.location,
@@ -228,7 +298,7 @@ export default function CompleteProfile() {
           {!aiLoading && (analysis || resumeDetails) && (
             <div className="bg-white border border-gray-200 rounded-xl p-6 mt-6">
               <h3 className="text-lg font-semibold mb-3">AI Resume Analysis</h3>
-              {analysis && <p className="text-gray-700 mb-4">{analysis}</p>}
+              {analysis && <div className="mb-4">{renderAnalysis(analysis)}</div>}
               {resumeDetails?.skills?.length > 0 && (
                 <div className="mb-4">
                   <h4 className="font-medium">Skills</h4>

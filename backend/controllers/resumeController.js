@@ -1,5 +1,5 @@
 const parseResume = require("../utils/pdfParser");
-const { extractResumeData } = require("../services/aiService");
+const { extractResumeData } = require("../services.js/aiService");
 const formatProfile = require("../utils/profileFormatter");
 
 const uploadResume = async (req, res) => {
@@ -16,10 +16,28 @@ const uploadResume = async (req, res) => {
         const resumeText = await parseResume(req.file.path);
 
         // Step 2: AI Analysis
-        const aiResponse = await extractResumeData(resumeText);
+        let aiResponse = null;
+        try {
+            aiResponse = await extractResumeData(resumeText);
+        } catch (aiError) {
+            console.warn("Resume AI analysis failed, using fallback response:", aiError.message);
+            aiResponse = {
+                profile: {},
+                skills: [],
+                education: [],
+                projects: [],
+                analysis: {
+                    profileScore: 0,
+                    confidenceScore: 0,
+                    strengths: [],
+                    missingFields: ["Resume analysis unavailable"],
+                    recommendations: ["Please upload a valid PDF or try again later."]
+                }
+            };
+        }
 
         // Step 3: Format Profile
-        const profile = formatProfile(aiResponse.profile);
+        const profile = formatProfile(aiResponse.profile || {});
 
         // Step 4: Send Response
         res.status(200).json({
@@ -30,7 +48,7 @@ const uploadResume = async (req, res) => {
                 education: aiResponse.education || [],
                 projects: aiResponse.projects || []
             },
-            analysis: aiResponse.analysis
+            analysis: aiResponse.analysis || {}
         });
 
     } catch (error) {
