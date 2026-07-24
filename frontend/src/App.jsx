@@ -7,6 +7,7 @@ import CompleteProfile from "./pages/CompleteProfile";
 import BrowseServices from "./pages/BrowseServices";
 import ProviderDetails from "./pages/ProviderDetails";
 import RoleSelection from "./pages/RoleSelection";
+import Chat from "./pages/Chat";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -27,6 +28,15 @@ function App() {
         <Route path="/services" element={<BrowseServices />} />
 
         <Route path="/provider/:id" element={<ProviderDetails />} />
+
+        <Route
+          path="/chat/:conversationId"
+          element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/complete-profile"

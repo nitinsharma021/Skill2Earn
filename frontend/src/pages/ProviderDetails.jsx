@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 export default function ProviderDetails() {
 
   const { id } = useParams();
 
+  const navigate = useNavigate();
   const [provider, setProvider] = useState(null);
 
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,32 @@ export default function ProviderDetails() {
 
     }
 
+  };
+
+  const handleChat = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await api.post("/chat/conversation", {
+        providerId: id,
+      });
+
+      const conversation = response.data.conversation || null;
+      const conversationId = conversation?.id || response.data.conversationId;
+
+      if (!conversationId) {
+        throw new Error("Could not determine conversation ID.");
+      }
+
+      navigate(`/chat/${conversationId}`);
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || error.message || "Unable to start chat.");
+    }
   };
 
   if (loading) {
@@ -155,7 +182,7 @@ export default function ProviderDetails() {
 
         {/* Contact Buttons */}
 
-        <div className="grid md:grid-cols-2 gap-4 mt-10">
+        <div className="grid md:grid-cols-3 gap-4 mt-10">
 
           <a
             href={`tel:${provider.phone}`}
@@ -172,6 +199,13 @@ export default function ProviderDetails() {
           >
             💬 WhatsApp
           </a>
+
+          <button
+            onClick={handleChat}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl text-center font-semibold"
+          >
+            💬 Message Provider
+          </button>
 
         </div>
 

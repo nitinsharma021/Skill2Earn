@@ -3,6 +3,7 @@ const profileRoutes = require("./routes/profileRoutes");
 const cors = require("cors");
 const providerRoutes = require("./routes/providerRoutes");
 const resumeRoutes = require("./routes/resumeRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 require("dotenv").config();
 
 const db = require("./config/db");
@@ -28,6 +29,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/providers", providerRoutes);
 app.use("/api/resume", resumeRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.get("/", (req, res) => {
     res.send("Skill2Earn Backend Running 🚀");
